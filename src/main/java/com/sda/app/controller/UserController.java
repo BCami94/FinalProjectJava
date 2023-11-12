@@ -40,27 +40,38 @@ public class UserController {
 
     @PostMapping("/")
     public ResponseEntity<ApiResponse> createUser(@RequestBody User user) {
+        User usr = new User();
+        usr.setUsername(user.getUsername());
+        usr.setEmail(user.getEmail());
+        usr.setPassword(user.getPassword());
+
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Utilizator creat cu success")
-                .data(userService.createUser(user))
+                .data(userService.createUser(usr))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/")
-    public ResponseEntity<ApiResponse> updateUser(User user) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse> updateUser(@RequestBody User user, @PathVariable ("id") Integer id) {
+        User usr = new User();
+        usr.setId(id);
+        usr.setUsername(user.getUsername());
+        usr.setEmail(user.getEmail());
+        usr.setPassword(user.getPassword());
+
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Utilizator actualizat cu success")
-                .data(userService.updateUser(user))
+                .data(userService.updateUser(usr))
                 .build();
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<ApiResponse> deleteUser(User user) {
-        userService.deleteUser(user);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable("id") Integer id) {
+        userService.deleteUser(id);
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
                 .message("Utilizator sters cu success")

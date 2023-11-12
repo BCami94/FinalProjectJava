@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -78,6 +79,29 @@ public class ItemController {
                 .data(null)
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse> searchItem(@RequestParam String word) {
+        //http://localhost:8080/items/search?word=bmw
+        //daca deschidem in browser, ne va afisa din baza de date
+        Optional<Item> item = itemService.searchItem(word);
+        ApiResponse response = new ApiResponse.Builder().build();
+        if (item.isPresent()) {
+            response = new ApiResponse.Builder()
+                    .status(200)
+                    .message("Item gasit")
+                    .data(item.get())
+                    .build();
+        } else {
+            response = new ApiResponse.Builder()
+                    .status(200)
+                    .message("Item nu a fost gasit")
+                    .data(null)
+                    .build();
+        }
+        return ResponseEntity.ok(response);
+
     }
 
 }
